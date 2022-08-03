@@ -6,7 +6,7 @@ template<typename T>
 Vector<T>::Vector() {
     m_capacity = 1;
     m_size = 0;
-    m_vector = new T[m_capacity];
+    m_vector = nullptr;
 }
 
 template<typename T>
@@ -26,7 +26,6 @@ Vector<T>::Vector(Vector<T>&& rhs) {
     m_size = rhs.m_size;
     m_capacity = rhs.m_capacity;
     m_vector = rhs.m_vector;
-    delete[] rhs.m_vector;
     rhs.m_vector = nullptr;
 }
 
@@ -66,11 +65,19 @@ Vector<T>& Vector<T>::operator=(const Vector<T>& other) {
 
 template <typename T>
 Vector<T>& Vector<T>::operator=(Vector<T>&& rhs) {
-    m_size = rhs.m_size;
-    m_capacity = rhs.m_capacity;
-    m_vector = rhs.m_vector;
-    delete[] rhs.m_vector;
-    rhs.m_vector = nullptr;
+    if (m_vector.empty()) {
+        m_size = rhs.m_size;
+        m_capacity = rhs.m_capacity;
+        m_vector = rhs.m_vector;
+        rhs.m_vector = nullptr;
+    }
+    else {
+        delete[] m_vector;
+        m_size = rhs.m_size;
+        m_capacity = rhs.m_capacity;
+        m_vector = rhs.m_vector;
+        rhs.m_vector = nullptr;
+    }
     return *this;
 }
 
@@ -138,7 +145,9 @@ void Vector<T>::resize() {
  
 template<typename T>
 void Vector<T>::push_back(T value) {
-    resize();
+    if (m_size == m_capacity) {
+        resize();
+    }
     m_vector[m_size++] = value;
 }
 
@@ -189,10 +198,7 @@ T Vector<T>::back() {
 
 template<typename T>
 void Vector<T>::insert(size_t index, T value) {
-    if (index < 0) {
-        throw std::out_of_range("segmentation fault");
-    }
-    else if (index > size()) {
+    if (index < 0 || index > size()) {
         throw std::out_of_range("segmentation fault");
     }
 
