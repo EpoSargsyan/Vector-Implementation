@@ -28,11 +28,3 @@ resize () - Function changes the capacity size when size and capacity of Vector 
 emplace () - Function extends the container by inserting a new element at the position. 
   
 <hr> 
-  
-<hr>
-  
-<h3> How to compile</h3>
-  
-Include <iostream> and Include <Class_Vector.h> in Main_Vector.cpp then compile.
-  
-<hr>
